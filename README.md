@@ -21,3 +21,12 @@ Going forward, we plan to use standard preprocessing strategies like converting 
 ### Handling outliers and missing data
 
 Our strategy to remove outliers by filtering data between the 10th and 90th percentile worked well on the sampled data, so we plan to implement the same strategy to handle outliers across the entire dataset that we will use for machine learning training tasks. Additionally, for any missing data we plan to explore either imputation using the median value for the feature or try to make it more granular and logical by instead getting the median value for a particular station (say) where we encounter the missing data point.
+
+### Model Training and Evaluation
+Our first strategy was to implement a Demand Forecasting Model in order to predict the number of taxis needed at every hour based on historical data to optimize taxi dispatches. The preprocessing we did included time slots: Index time into 15, 30, and 60-minute intervals, features: Day, Time, Month, Pickup Location, Holiday, Time Slot, as well as grouping data by PickupLocationID and time slot. The model we implemented was a Random Forest, with the evaluation strategy of 80-20 split on the grouped dataset. The metric we employed was Root Mean Square Error (RMSE).
+
+Our second model training implementation is a rider duration prediction model. The objective is predict trip duration using pick-up and drop-off data to uncover insights about traffic patterns. Our preprocessing included location data: Convert PULocationID and DOLocationID to latitude and longitude for precise location analysis. Features were Day, Time, Month, Latitude, Longitude. The model type is XGBoost Regressor, and evaluation strategy was once again, 80-20 split, with the metric RMSE. 
+
+Our third model training implentation was focused on anomaly detection. The objective was to identify irregularities such as unusual fare prices which could indicate errors or fraudulent activity. Preprocessing included the features: Day, Time, Fare Price. The model was type PCA (Principal Component Analysis). Our task succeeded in applying PCA to reduce dimensionality and detect outliers based on fare price variations. 
+
+Implementation included PySpark, since it is able to handle large datasets efficiently, PySpark MLlib for Random Forest and XGBoost models, and PCA for anomaly detection.
