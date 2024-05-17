@@ -21,3 +21,11 @@ Going forward, we plan to use standard preprocessing strategies like converting 
 ### Handling outliers and missing data
 
 Our strategy to remove outliers by filtering data between the 10th and 90th percentile worked well on the sampled data, so we plan to implement the same strategy to handle outliers across the entire dataset that we will use for machine learning training tasks. Additionally, for any missing data we plan to explore either imputation using the median value for the feature or try to make it more granular and logical by instead getting the median value for a particular station (say) where we encounter the missing data point.
+
+### Anomaly Detection
+Through PCA technique, we aim to reduce dimensionality of the dataset, thereby enhancing our ability to identify outliers effectively.
+Anomaly Criteria: Establish anomalies based on deviations from the norm where the PCA-transformed features exceed the mean plus three times the standard deviation of the  features.
+
+### Model Training and Evaluation
+Training Process- Model Setup: We will initially deploy a Random Forest model due to its robustness against overfitting and its ability to handle large datasets with a mixture of categorical and numerical data effectively.
+Feature Engineering: To better capture the dynamics of taxi demand, we will experiment with polynomial feature expansion and interactions between key features such as time slots and locations.
