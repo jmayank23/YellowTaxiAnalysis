@@ -43,3 +43,10 @@ Our strategy to remove outliers by filtering data between the 10th and 90th perc
 - Based on the defined threshold, anomalies were identified.
 
 ### Train Linear Regression Model and XGBoost Regressor to predict trip duration
+- Given the features of day, time, month, pickup and dropoff locations, predict the ride duration.
+- We represent the pickup and dropoff locations as latitude and longitude rather than Zone ID's.
+- Normalized all features with a scaler model.
+- We trained a Linear and XGBoost Regression model on these features and evaluate the predictions using RMSE.
+
+
+From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our model would be on the far right of the fitting graph indicating a very high complexity with bad generalization on the data. For next time, we plan to use the same model, but rather improve our feature engineering, as we suspect this as the source of our prediciton results. Overall, we conclude our model overfitted the training set and we could improve it by changing how we are representing our features.
