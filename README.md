@@ -46,7 +46,7 @@ Our strategy to remove outliers by filtering data between the 10th and 90th perc
 - Given the features of day, time, month, pickup, and dropoff locations, predict the ride duration.
 - We represent the pickup and dropoff locations as latitude and longitude rather than Zone ID's.
 - To obtain the latitude and longitude of the locations, we used GeoPandas to read and process the shapefile containing the geometry of the location IDs. We then merged this shapefile with our Spark DataFrame. We found the representative points (centers) of the geometries and converted the coordinate system to obtain the latitude and longitude in degrees.
-- Normalized all features with a scaler model.
+- Normalized all features using a standard scalar with a mean value of 0 and standard deviation of -1.
 - We trained a Linear and XGBoost Regression model on these features and evaluated the predictions using RMSE.
 
 
