@@ -21,3 +21,21 @@ Going forward, we plan to use standard preprocessing strategies like converting 
 ### Handling outliers and missing data
 
 Our strategy to remove outliers by filtering data between the 10th and 90th percentile worked well on the sampled data, so we plan to implement the same strategy to handle outliers across the entire dataset that we will use for machine learning training tasks. Additionally, for any missing data we plan to explore either imputation using the median value for the feature or try to make it more granular and logical by instead getting the median value for a particular station (say) where we encounter the missing data point.
+
+## Task 3: Anomaly detection to identify irregularities
+
+### Preprocessing and Feature Selection
+
+- Rows with any missing values were removed as it may be falsely detected as abnormal data.
+- Trip Duration was calculated seconds by subtracting the pickup time from the dropoff time and added as a new colume ("trip duration")
+- Trips with non-positive durations were filtered out from the analysis.
+- Selected Feature: "trip_duration", "trip_distance", "fare_amount", "total_amount", "tip_amount", "tolls_amount", "congestion_surcharge", "airport_fee"
+- VectorAssembler was used to combine the selected features into a single vector column named features.
+
+### PCA/Spectral Analysis
+
+- Principal Component Analysis (PCA) was applied to reduce the dimensionality of the features column.
+- UDF was defined and registered to calculate the Euclidean norm of PCA features.
+- Summary statistics (mean and standard deviation) for the pca_norm column were calculated.
+- Anomaly threshold was defined as the mean plus three times the standard deviation of pca_norm.
+- Based on the defined threshold, anomalies were identified.
