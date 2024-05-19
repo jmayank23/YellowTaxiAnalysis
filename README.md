@@ -16,11 +16,11 @@ When visualizing the raw data for all of our EDA tasks, we initially noticed tha
 
 ## Preprocessing Plan
 
-Going forward, we plan to use standard preprocessing strategies like converting our categorical variables to one-hot encoded vectors and for normalization of all numerical features we plan to subtract the mean and scale to unit variance, using Standard Scaler (from pyspark.ml.feature).
+Going forward, we plan to use standard preprocessing strategies like converting our categorical variables to one-hot encoded vectors, and for normalization of all numerical features we plan to subtract the mean and scale to unit variance, using Standard Scaler (from pyspark.ml.feature).
 
 ### Handling outliers and missing data
 
-Our strategy to remove outliers by filtering data between the 10th and 90th percentile worked well on the sampled data, so we plan to implement the same strategy to handle outliers across the entire dataset that we will use for machine learning training tasks. Additionally, for any missing data we plan to explore either imputation using the median value for the feature or try to make it more granular and logical by instead getting the median value for a particular station (say) where we encounter the missing data point.
+Our strategy to remove outliers by filtering data between the 10th and 90th percentile worked well on the sampled data, so we plan to implement the same strategy to handle outliers across the entire dataset that we will use for machine learning training tasks. Additionally, for any missing data, we plan to explore either imputation using the median value for the feature or try to make it more granular and logical by instead getting the median value for a particular station (say) where we encounter the missing data point.
 
 ## Milestone 3: Finish Preprocessing and Train ML model
 
@@ -29,7 +29,7 @@ Our strategy to remove outliers by filtering data between the 10th and 90th perc
 #### Preprocessing and Feature Selection
 
 - Rows with any missing values were removed as it may be falsely detected as abnormal data.
-- Trip Duration was calculated seconds by subtracting the pickup time from the dropoff time and added as a new colume ("trip duration")
+- Trip Duration was calculated in seconds by subtracting the pickup time from the dropoff time and added as a new column ("trip duration")
 - Trips with non-positive durations were filtered out from the analysis.
 - Selected Feature: "trip_duration", "trip_distance", "fare_amount", "total_amount", "tip_amount", "tolls_amount", "congestion_surcharge", "airport_fee"
 - VectorAssembler was used to combine the selected features into a single vector column named features.
@@ -43,10 +43,11 @@ Our strategy to remove outliers by filtering data between the 10th and 90th perc
 - Based on the defined threshold, anomalies were identified.
 
 ### Train Linear Regression Model and XGBoost Regressor to predict trip duration
-- Given the features of day, time, month, pickup and dropoff locations, predict the ride duration.
+- Given the features of day, time, month, pickup, and dropoff locations, predict the ride duration.
 - We represent the pickup and dropoff locations as latitude and longitude rather than Zone ID's.
+- To obtain the latitude and longitude of the locations, we used GeoPandas to read and process the shapefile containing the geometry of the location IDs. We then merged this shapefile with our Spark DataFrame. We found the representative points (centers) of the geometries and converted the coordinate system to obtain the latitude and longitude in degrees.
 - Normalized all features with a scaler model.
-- We trained a Linear and XGBoost Regression model on these features and evaluate the predictions using RMSE.
+- We trained a Linear and XGBoost Regression model on these features and evaluated the predictions using RMSE.
 
 
-From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our model would be on the far right of the fitting graph indicating a very high complexity with bad generalization on the data. For next time, we plan to use the same model, but rather improve our feature engineering, as we suspect this as the source of our prediciton results. Overall, we conclude our model overfitted the training set and we could improve it by changing how we are representing our features.
+From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our model would be on the far right of the fitting graph indicating a very high complexity with a bad generalization of the data. For next time, we plan to use the same model, but rather improve our feature engineering, as we suspect this is the source of our prediction results. Overall, we conclude our model overfitted the training set and we could improve it by changing how we are representing our features.
