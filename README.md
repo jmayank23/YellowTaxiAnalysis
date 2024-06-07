@@ -55,12 +55,12 @@ Our strategy to remove outliers by filtering data between the 10th and 90th perc
 - Based on the defined threshold, anomalies were identified.
 
 ### Train Linear Regression Model and XGBoost Regressor to predict trip duration
+
 - Given the features of day, time, month, pickup and dropoff locations, predict the ride duration.
 - We represent the pickup and dropoff locations as latitude and longitude rather than Zone ID's.
-To obtain the latitude and longitude of the locations, we used GeoPandas to read and process the shapefile containing the geometry of the location IDs. We then merged this shapefile with our Spark DataFrame. We found the representative points (centers) of the geometries and converted the coordinate system to obtain the latitude and longitude in degrees.
+  To obtain the latitude and longitude of the locations, we used GeoPandas to read and process the shapefile containing the geometry of the location IDs. We then merged this shapefile with our Spark DataFrame. We found the representative points (centers) of the geometries and converted the coordinate system to obtain the latitude and longitude in degrees.
 - Normalized all features using a standard scalar with a mean value of 0 and standard deviation of -1.
 - We trained a Linear and XGBoost Regression model on these features and evaluate the predictions using RMSE.
-
 
 From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our model would be on the far right of the fitting graph indicating a very high complexity with bad generalization on the data. For next time, we plan to use the same model, but rather improve our feature engineering, as we suspect this as the source of our prediciton results. Overall, we conclude our model overfitted the training set and we could improve it by changing how we are representing our features.
 
@@ -69,8 +69,9 @@ From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our 
 ### Method
 
 #### Data Exploration
+
 We decided to work with 6 months of data and sampled 10% of this to ensure our code ran efficiently and plots were not overcrowded.
-When visualizing the raw data for all of our EDA tasks, we initially noticed that there were many many outlier data points that made interpreting the data difficult. To filter out this noise, we filtered the data such that the feature values fall between a lower and upper bound. 
+When visualizing the raw data for all of our EDA tasks, we initially noticed that there were many many outlier data points that made interpreting the data difficult. To filter out this noise, we filtered the data such that the feature values fall between a lower and upper bound.
 
 ```
 def filter_quantile_range(df, col_names, lower_quantile=0.01, upper_quantile=0.99):
@@ -88,33 +89,37 @@ def filter_quantile_range(df, col_names, lower_quantile=0.01, upper_quantile=0.9
     """
     # Initialize an empty list to store the filter conditions
     conditions = []
-    
+
     for column_name in col_names:
         # Get the quantile bounds for the column
         lower_bound, upper_bound = df.approxQuantile(column_name, [lower_quantile, upper_quantile], 0.01)
-        
+
         # Create a condition to filter data within the quantile range for this column
         condition = (col(column_name) >= lower_bound) & (col(column_name) <= upper_bound)
         conditions.append(condition)
-    
+
     # Combine all the conditions using AND (every column must meet its own condition)
     combined_condition = conditions[0]
     for condition in conditions[1:]:
         combined_condition &= condition
-    
+
     # Filter the DataFrame based on the combined condition
     filtered_df = df.filter(combined_condition)
-    
+
     return filtered_df
 
 ```
-From this step determined that data between the 10th and 90th percentiles provides a good signal to understand the data features. 
+
+From this step determined that data between the 10th and 90th percentiles provides a good signal to understand the data features.
+
 ```
 filtered_df = filter_quantile_range(sampled_df, ["total_amount", "tip_amount", "fare_amount"], lower_quantile=0.0
 filtered_pandas_df = filtered_df.select("total_amount", "tip_amount", "fare_amount").toPandas()
 filtered_pandas_df.describe()
- ```
+```
+
 For some of the features, we tried to capture the outlier data (for example, negative tip and fare amounts) and looked for any trends or if the data might have been corrupted. If the negative amount was always -1000, say, then it is likely this would have happened from data corruption. However, we did not see such a constant value and plan to analyze further).
+
 ```
 # Filter for negative fares and tips, group by payment type
 negative_fares_tips = sampled_df.filter((col("fare_amount") < 0) | (col("tip_amount") < 0))
@@ -127,6 +132,7 @@ negative_fares_tips.withColumn("year", year("tpep_pickup_datetime")) \
     .withColumn("month", month("tpep_pickup_datetime")) \
     .groupBy("year", "month").count().orderBy("year", "month").show()
 ```
+
 Feature Relationships Analyzed in EDA
 Total Amount vs. Fare Amount vs. Tip Amount
 Trip Duration vs. Distance
@@ -135,10 +141,12 @@ Payment Type vs Locations
 Dropoff Location (Density)
 
 #### Preprocessing
-In this project, we approached preprocessing with the purpose of enhancing our models. We removed rows with any missing values to prevent false anomaly detection and calculated the 'trip_duration' in seconds by subtracting the pickup time from the dropoff time, excluding non-positive durations. 
+
+In this project, we approached preprocessing with the purpose of enhancing our models. We removed rows with any missing values to prevent false anomaly detection and calculated the 'trip_duration' in seconds by subtracting the pickup time from the dropoff time, excluding non-positive durations.
+
 ```
 # Filter for negative fares and tips, group by payment type
-negative_fares_tips = sampled_df.filter((col("fare_amount") < 0) | (col("tip_amount") < 0)) 
+negative_fares_tips = sampled_df.filter((col("fare_amount") < 0) | (col("tip_amount") < 0))
 # Calculate the time difference in seconds using unix_timestamp
 sampled_df = sampled_df.withColumn(
     "trip_duration_seconds",
@@ -148,8 +156,10 @@ sampled_df = sampled_df.withColumn(
 # filter using quantile range function based on time_difference_seconds
 filtered_df = filter_quantile_range(sampled_df, ["trip_duration_seconds", "trip_distance"], 0.05, 0.95)
 
- ```
+```
+
 Key features such as 'trip_distance', 'fare_amount', 'total_amount', 'tip_amount', 'tolls_amount', 'congestion_surcharge', and 'airport_fee' were combined into a single vector using VectorAssembler.
+
 ```
 # Select relevant features for analysis
 features_df = df_cleaned.select("trip_duration", "trip_distance", "fare_amount", "total_amount", "tip_amount", "tolls_amount", "congestion_surcharge", "airport_fee")
@@ -161,7 +171,9 @@ assembler = VectorAssembler(inputCols=features_df.columns, outputCol="features")
 vector_df = assembler.transform(features_df)
 
 ```
+
 For dimensionality reduction, we applied Principal Component Analysis (PCA) and used a user-defined function (UDF) to compute the Euclidean norm of PCA features. By establishing an anomaly threshold based on statistical analysis, we were able to identify outliers effectively.
+
 ```
 # Apply PCA
 pca = PCA(k=3, inputCol="features", outputCol="pca_features")
@@ -179,8 +191,10 @@ norm_udf = udf(pca_norm, DoubleType())
 # Add a column for the norm of the PCA features
 pca_result = pca_result.withColumn("pca_norm", norm_udf(col("pca_features")))
 
- ```
-In predicting trip duration, we shifted from using zone IDs to latitude and longitude for pickup and dropoff locations, utilizing GeoPandas for geographic data processing. 
+```
+
+In predicting trip duration, we shifted from using zone IDs to latitude and longitude for pickup and dropoff locations, utilizing GeoPandas for geographic data processing.
+
 ```
 # Apply PCA
 pca = PCA(k=3, inputCol="features", outputCol="pca_features")
@@ -190,9 +204,15 @@ pca_result = pca_model.transform(vector_df)
 # Show PCA results
 pca_result.select("pca_features").show(truncate=False)
 ```
-Features were normalized using a standard scalar, and we employed both Linear Regression and XGBoost models for prediction. 
+
+Features were normalized using a standard scalar, and we employed both Linear Regression and XGBoost models for prediction.
 
 #### Model 1
-Despite achieving a training error of zero, the test Root Mean Squared Error (RMSE) was approximately 41, indicating overfitting. This result suggests our models were too complex, failing to generalize well to unseen data. Moving forward, we plan to refine our feature engineering approach to improve model performance and avoid overfitting, potentially leading to more robust and generalizable predictions.
+
+With our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand.
+
+(MOVE TO RESULTS SECTION) Despite achieving a training error of zero, the test Root Mean Squared Error (RMSE) was approximately 41, indicating overfitting. This result suggests our models were too complex, failing to generalize well to unseen data. Moving forward, we plan to refine our feature engineering approach to improve model performance and avoid overfitting, potentially leading to more robust and generalizable predictions.
 
 #### Model 2
+
+For our second model, we similarly chose an XGBoost regressor, but for a different task. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE.
