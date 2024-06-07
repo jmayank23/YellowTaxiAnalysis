@@ -72,7 +72,8 @@ From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our 
 We decided to work with 6 months of data and sampled 10% of this to ensure our code ran efficiently and plots were not overcrowded.
 When visualizing the raw data for all of our EDA tasks, we initially noticed that there were many many outlier data points that made interpreting the data difficult. To filter out this noise, we filtered the data such that the feature values fall between a lower and upper bound. 
 
-``` def filter_quantile_range(df, col_names, lower_quantile=0.01, upper_quantile=0.99):
+```
+def filter_quantile_range(df, col_names, lower_quantile=0.01, upper_quantile=0.99):
     """
     Filter data in the DataFrame based on the specified quantile range for given columns.
 
