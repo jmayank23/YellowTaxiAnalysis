@@ -209,10 +209,10 @@ Features were normalized using a standard scalar, and we employed both Linear Re
 
 #### Model 1
 
-With our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand.
+With our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper paramteters for the model were the default for SparkXGBRegressor.
 
 (MOVE TO RESULTS SECTION) Despite achieving a training error of zero, the test Root Mean Squared Error (RMSE) was approximately 41, indicating overfitting. This result suggests our models were too complex, failing to generalize well to unseen data. Moving forward, we plan to refine our feature engineering approach to improve model performance and avoid overfitting, potentially leading to more robust and generalizable predictions.
 
 #### Model 2
 
-For our second model, we similarly chose an XGBoost regressor, but for a different task. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE.
+For our second model, we similarly chose an XGBoost regressor, but for a different task. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
