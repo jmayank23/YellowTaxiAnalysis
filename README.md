@@ -68,7 +68,7 @@ From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our 
 
 ### Method
 
-Data Exploration
+#### Data Exploration
 We decided to work with 6 months of data and sampled 10% of this to ensure our code ran efficiently and plots were not overcrowded.
 When visualizing the raw data for all of our EDA tasks, we initially noticed that there were many many outlier data points that made interpreting the data difficult. To filter out this noise, we filtered the data such that the feature values fall between a lower and upper bound. 
 
@@ -133,7 +133,7 @@ All Features (Trends by Hour of Day)
 Payment Type vs Locations
 Dropoff Location (Density)
 
-Preprocessing
+#### Preprocessing
 In this project, we approached preprocessing with the purpose of enhancing our models. We removed rows with any missing values to prevent false anomaly detection and calculated the 'trip_duration' in seconds by subtracting the pickup time from the dropoff time, excluding non-positive durations. 
 ```
 # Filter for negative fares and tips, group by payment type
@@ -191,7 +191,7 @@ pca_result.select("pca_features").show(truncate=False)
 ```
 Features were normalized using a standard scalar, and we employed both Linear Regression and XGBoost models for prediction. 
 
-### Model 1
+#### Model 1
 Despite achieving a training error of zero, the test Root Mean Squared Error (RMSE) was approximately 41, indicating overfitting. This result suggests our models were too complex, failing to generalize well to unseen data. Moving forward, we plan to refine our feature engineering approach to improve model performance and avoid overfitting, potentially leading to more robust and generalizable predictions.
 
-### Model 2
+#### Model 2
