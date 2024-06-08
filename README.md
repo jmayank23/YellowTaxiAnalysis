@@ -326,8 +326,9 @@ In summary, this project not only demonstrates the potential of machine learning
 ### Collaboration
 Mayank Jain: Collaborated on planning tasks, managing git and milestone report writing. Worked on code for EDA and Task 2: Demand Forecasting.
 
-Nico Cereghini: Collaborated on planning the model tasks, coding in EDA and preprocessing, and wrote up the Indroduction and Methods sections of the final report.
+Nico Cereghini: Collaborated on planning the model tasks, coding in EDA and preprocessing, and wrote up the Introduction and Methods sections of the final report.
 
+Kenny Hwang: Collaborated on planning the tasks, coding in anomaly detection and preprocessing, and drafted the results and discussion sections of the final report.
 
 
 
