@@ -295,11 +295,6 @@ The results indicated close performance between the two models, with XGBoost sli
 - Shortcomings and Critique:
 The minimal performance gain achieved by XGBoost compared to the simpler Linear Regression model raises questions about the cost-benefit of deploying more complex models. Given the additional computational cost and complexity in tuning and interpretation associated with XGBoost, the slight improvement might not justify its use in all application scenarios. Our approach to feature engineering was primarily basic temporal and spatial transformations. More sophisticated methods, such as interaction terms or polynomial features, might reveal deeper insights. Additionally, the imputation of missing values using mean or mode is a rudimentary approach that could be enhanced by more predictive imputation methods, potentially affecting model accuracy.
 
-- Potential Improvements:
-1. Enhanced Feature Engineering: Implementing more advanced feature engineering techniques, such as clustering geospatial data or engineering route complexity features from pickup and dropoff coordinates, could potentially unveil complex patterns not captured by the current model.
-2. Cross-Validation: Employing more rigorous validation techniques, such as K-fold cross-validation, would ensure that the model's performance is consistent across different subsets of data and not just a result of particular train-test split.
-3. Incorporation of Additional Data: Including external factors like weather conditions, traffic data, and special events could significantly enhance the model’s ability to predict trip durations more accurately.
-
 #### Task 2: Demand Forecasting
 
 - Model Selection and Rationale:
@@ -311,9 +306,10 @@ The performance difference between XGBoost and Linear Regression was significant
 - Shortcomings and Critique:
 Our analysis was constrained to one year of data and focused on aggregate demand without distinguishing between different types of taxi services or varying geographic details beyond pickup locations. Including additional data, such as weather conditions or special events, could potentially enhance model accuracy and relevance. Moreover, while we incorporated time and holiday features, our models might benefit from more sophisticated features such as interaction terms between time slots and location IDs, or more granular temporal resolutions for holiday effects.
 
-- Potential Improvements:
-1. Incorporating More Data: Adding data from multiple years or different types of taxis could provide a more comprehensive understanding of patterns and improve the robustness of predictions.
-2. Advanced Feature Engineering: Exploring more complex features and transformation techniques could unveil deeper insights and enhance model performance.
+#### Potential Improvements for Both Models:
+1. Enhanced Feature Engineering: Implementing more advanced feature engineering techniques, such as clustering geospatial data or engineering route complexity features from pickup and dropoff coordinates, could potentially unveil complex patterns not captured by the current model.
+2. Cross-Validation: Employing more rigorous validation techniques, such as K-fold cross-validation, would ensure that the model's performance is consistent across different subsets of data and not just a result of particular train-test split.
+3. Incorporation of Additional Data: Including external factors like weather conditions, traffic data, and special events could significantly enhance the model’s ability to predict trip durations more accurately.
 
 ### Conclusion
 This project represents an in-depth analysis of New York City's yellow cab taxi records over the last five years. Our EDA revealed critical insights into the temporal, spatial, and economic factors driving taxi usage. We observed that taxi demand peaks during rush hours and on public holidays, and is concentrated in specific neighborhoods, which could inform targeted taxi deployment strategies. We employed machine learning models including Linear Regression and XGBoost for our tasks, in both cases XGBoost performed better and linear regression offered a baseline for comparison. 
