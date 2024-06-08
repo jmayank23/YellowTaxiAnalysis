@@ -276,6 +276,10 @@ There are several areas for improvement in our project. Firstly, the integration
 In summary, this project not only demonstrates the potential of machine learning to transform urban transportation systems but also highlights the ongoing need for innovative approaches in data analytics to tackle the challenges of urban mobility. As we continue to refine our methodologies and integrate broader datasets, we move closer to reaching the goal of more efficient and responsive taxi transport systems within cities today.
 
 
+### Collaboration
+Mayank Jain: Collaborated on planning tasks, managing git and milestone report writing. Worked on code for EDA and Task 2: Demand Forecasting.
+
+
 
 
 
