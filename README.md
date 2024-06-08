@@ -209,29 +209,28 @@ Features were normalized using a standard scalar, and we employed both Linear Re
 
 #### Model 1
 
-With our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor.
+For our second model, we similarly chose an XGBoost regressor, but for a different task. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
 
 #### Model 2
 
-For our second model, we similarly chose an XGBoost regressor, but for a different task. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
+With our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor.
 
 ### Result
 
 #### Model 1
-
-- Data Pre-Processing:
-We extracted day, month, and hour from the tpep_pickup_datetime to enrich our dataset with additional temporal features. Utilizing the USFederalHolidayCalendar, we identified public holidays to examine their impact on taxi usage. We created indices representing 15-minute, 30-minute, and 60-minute intervals throughout the day to analyze patterns in taxi demand.
-
-- Model Evaluation:
-We applied two predictive models to forecast taxi demand based on the processed features: XGBoost and Linear Regression. Both models were trained on an 80/20 split of the data. We configured an XGBoost regressor with the aim to predict the number of taxi trips in 60-minute intervals. The RMSE (Root Mean Squared Error) achieved by the XGBoost model was 96.66, indicating a relatively high accuracy in capturing the variability of the taxi demand. We also employed a Linear Regression model for the same prediction task. However, this model resulted in a significantly higher RMSE of 2817.12, suggesting that it was less effective at modeling the complex patterns present in our dataset.
-
-#### Model 2
 
 - Data Pre-Processing and Feature Engineering:
 Data preprocessing involved merging trip data with geographical zone information, converting timestamps into more granular time features (e.g., month, day, hour), and encoding categorical data. Missing values were imputed based on their mean or mode as appropriate, ensuring robustness in the model training process.
 
 - Model Evaluation:
 XGBoost and Linear Regression models were trained on an 80/20 split of the data. The Linear Regression model utilized standardized features to prevent scale discrepancies from influencing the model’s performance. The XGBoost model was configured with default settings, focusing on capturing nonlinear patterns and interactions between features. The performance of the models was assessed using the Root Mean Squared Error (RMSE) metric, computed on the test dataset. The Linear Regression model achieved an RMSE of 42.43, indicating the average prediction error in minutes. The XGBoost model demonstrated a slightly better performance with an RMSE of 41.25.
+#### Model 2
+
+- Data Pre-Processing:
+We extracted day, month, and hour from the tpep_pickup_datetime to enrich our dataset with additional temporal features. Utilizing the USFederalHolidayCalendar, we identified public holidays to examine their impact on taxi usage. We created indices representing 15-minute, 30-minute, and 60-minute intervals throughout the day to analyze patterns in taxi demand.
+
+- Model Evaluation:
+We applied two predictive models to forecast taxi demand based on the processed features: XGBoost and Linear Regression. Both models were trained on an 80/20 split of the data. We configured an XGBoost regressor with the aim to predict the number of taxi trips in 60-minute intervals. The RMSE (Root Mean Squared Error) achieved by the XGBoost model was 96.66, indicating a relatively high accuracy in capturing the variability of the taxi demand. We also employed a Linear Regression model for the same prediction task. However, this model resulted in a significantly higher RMSE of 2817.12, suggesting that it was less effective at modeling the complex patterns present in our dataset.
 
 ### Discussion
 
