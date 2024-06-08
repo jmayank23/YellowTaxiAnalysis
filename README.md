@@ -256,24 +256,25 @@ merged_zone = merged_zone.drop('time_diff_seconds')
 
 Features were normalized using a standard scalar, and we employed both Linear Regression and XGBoost models for prediction.
 
-#### Model 1
+#### Task 1: Trip Duration Prediction
 
-For our first task, we chose an XGBoost regressor. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
+We tested the Linear Regression and XGBoost regressor. We used the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. We opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
 
-#### Model 2
+#### Task 2: Demand Forecasting
 
-For our second task, with our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor.
+We tested the Linear Regression and XGBoost regressor. From our preprocessed features preprocessed we used day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor. Here, timeslot refers to 60 minute intervals of the day, so all taxis requested from 12 midnight to 1 am on a given day got clubbed into the timeslot with index 0, taxis between 1AM and 2AM for clubbed into timeslot index 1 and so on.
 
 ### Result
 
-#### Model 1
+#### Task 1: Trip Duration Prediction
 
 - Data Pre-Processing and Feature Engineering:
 Data preprocessing involved merging trip data with geographical zone information, converting timestamps into more granular time features (e.g., month, day, hour), and encoding categorical data. Missing values were imputed based on their mean or mode as appropriate, ensuring robustness in the model training process.
 
 - Model Evaluation:
 XGBoost and Linear Regression models were trained on an 80/20 split of the data. The Linear Regression model utilized standardized features to prevent scale discrepancies from influencing the model’s performance. The XGBoost model was configured with default settings, focusing on capturing nonlinear patterns and interactions between features. The performance of the models was assessed using the Root Mean Squared Error (RMSE) metric, computed on the test dataset. The Linear Regression model achieved an RMSE of 42.43, indicating the average prediction error in minutes. The XGBoost model demonstrated a slightly better performance with an RMSE of 41.25.
-#### Model 2
+
+#### Task 2: Demand Forecasting
 
 - Data Pre-Processing:
 We extracted day, month, and hour from the tpep_pickup_datetime to enrich our dataset with additional temporal features. Utilizing the USFederalHolidayCalendar, we identified public holidays to examine their impact on taxi usage. We created indices representing 15-minute, 30-minute, and 60-minute intervals throughout the day to analyze patterns in taxi demand.
@@ -283,22 +284,7 @@ We applied two predictive models to forecast taxi demand based on the processed 
 
 ### Discussion
 
-#### Model 1
-
-- Model Selection and Rationale:
-The choice of XGBoost and Linear Regression models was driven by their contrasting capabilities and the nature of our dataset. XGBoost, known for its performance in complex datasets with non-linear relationships, was expected to handle the intricacies of taxi trip data effectively. Linear Regression, while simpler and less powerful for non-linear patterns, was chosen to serve as a baseline for comparison. This methodological diversity allowed us to evaluate the spectrum of model capabilities and their suitability for predicting taxi demand.
-
-- Interpretation of Results:
-The performance difference between XGBoost and Linear Regression was significant. The XGBoost model's RMSE of 96.66 suggests a strong fit to the data, indicating its robustness in capturing the complex dynamics of taxi usage patterns, including temporal variations and holiday impacts. In contrast, the Linear Regression model's high RMSE of 2817.12 highlights its limitations in this context, primarily due to its inability to model the non-linear dependencies between features and taxi demand effectively.
-
-- Shortcomings and Critique:
-Our analysis was constrained to one year of data and focused on aggregate demand without distinguishing between different types of taxi services or varying geographic details beyond pickup locations. Including additional data, such as weather conditions or special events, could potentially enhance model accuracy and relevance. Moreover, while we incorporated time and holiday features, our models might benefit from more sophisticated features such as interaction terms between time slots and location IDs, or more granular temporal resolutions for holiday effects.
-
-- Potential Improvements:
-1. Incorporating More Data: Adding data from multiple years or different types of taxis could provide a more comprehensive understanding of patterns and improve the robustness of predictions.
-2. Advanced Feature Engineering: Exploring more complex features and transformation techniques could unveil deeper insights and enhance model performance.
-
-#### Model 2
+#### Task 1: Trip Duration Prediction
 
 - Model Selection and Rationale:
 For predicting taxi trip durations, we utilized both Linear Regression and XGBoost Regression models to cover a range of modeling techniques from simple to more complex approaches. The Linear Regression model served as a straightforward approach to gauge basic relationships between features and the target variable. On the other hand, XGBoost was chosen for its ability to handle complex patterns and interactions among features, which are common in geospatial and temporal data like taxi trip records.
@@ -314,6 +300,20 @@ The minimal performance gain achieved by XGBoost compared to the simpler Linear 
 2. Cross-Validation: Employing more rigorous validation techniques, such as K-fold cross-validation, would ensure that the model's performance is consistent across different subsets of data and not just a result of particular train-test split.
 3. Incorporation of Additional Data: Including external factors like weather conditions, traffic data, and special events could significantly enhance the model’s ability to predict trip durations more accurately.
 
+#### Task 2: Demand Forecasting
+
+- Model Selection and Rationale:
+The choice of XGBoost and Linear Regression models was driven by their contrasting capabilities and the nature of our dataset. XGBoost, known for its performance in complex datasets with non-linear relationships, was expected to handle the intricacies of taxi trip data effectively. Linear Regression, while simpler and less powerful for non-linear patterns, was chosen to serve as a baseline for comparison. This methodological diversity allowed us to evaluate the spectrum of model capabilities and their suitability for predicting taxi demand.
+
+- Interpretation of Results:
+The performance difference between XGBoost and Linear Regression was significant. The XGBoost model's RMSE of 96.66 suggests a strong fit to the data, indicating its robustness in capturing the complex dynamics of taxi usage patterns, including temporal variations and holiday impacts. In contrast, the Linear Regression model's high RMSE of 2817.12 highlights its limitations in this context, primarily due to its inability to model the non-linear dependencies between features and taxi demand effectively.
+
+- Shortcomings and Critique:
+Our analysis was constrained to one year of data and focused on aggregate demand without distinguishing between different types of taxi services or varying geographic details beyond pickup locations. Including additional data, such as weather conditions or special events, could potentially enhance model accuracy and relevance. Moreover, while we incorporated time and holiday features, our models might benefit from more sophisticated features such as interaction terms between time slots and location IDs, or more granular temporal resolutions for holiday effects.
+
+- Potential Improvements:
+1. Incorporating More Data: Adding data from multiple years or different types of taxis could provide a more comprehensive understanding of patterns and improve the robustness of predictions.
+2. Advanced Feature Engineering: Exploring more complex features and transformation techniques could unveil deeper insights and enhance model performance.
 
 ### Conclusion
 This project represents an in-depth analysis of New York City's yellow cab taxi records over the last five years. Our EDA revealed critical insights into the temporal, spatial, and economic factors driving taxi usage. We observed that taxi demand peaks during rush hours and on public holidays, and is concentrated in specific neighborhoods, which could inform targeted taxi deployment strategies. We employed machine learning models including Linear Regression and XGBoost for our tasks, in both cases XGBoost performed better and linear regression offered a baseline for comparison. 
