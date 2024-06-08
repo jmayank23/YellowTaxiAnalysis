@@ -66,7 +66,7 @@ From this task, we saw a training error of 0 with a test RMSE of ~41. Thus, our 
 
 ## Milestone 4: Final Submission
 
-### Method
+### Methods
 
 #### Data Exploration
 
