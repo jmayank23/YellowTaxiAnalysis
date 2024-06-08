@@ -328,7 +328,7 @@ Mayank Jain: Collaborated on planning tasks, managing git and milestone report w
 
 Nico Cereghini: Collaborated on planning the model tasks, coding in EDA and preprocessing, and wrote up the Introduction and Methods sections of the final report.
 
-Kenny Hwang: Collaborated on planning the tasks, coding in anomaly detection and preprocessing, and drafted the results and discussion sections of the final report.
+Kenny Hwang: Collaborated on planning the tasks, wrote code for anomaly detection and preprocessing, and drafted the results and discussion sections of the final report.
 
 
 
