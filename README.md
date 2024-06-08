@@ -191,11 +191,6 @@ norm_udf = udf(pca_norm, DoubleType())
 # Add a column for the norm of the PCA features
 pca_result = pca_result.withColumn("pca_norm", norm_udf(col("pca_features")))
 
-```
-
-In predicting trip duration, we shifted from using zone IDs to latitude and longitude for pickup and dropoff locations, utilizing GeoPandas for geographic data processing.
-
-```
 # Apply PCA
 pca = PCA(k=3, inputCol="features", outputCol="pca_features")
 pca_model = pca.fit(vector_df)
@@ -203,17 +198,71 @@ pca_result = pca_model.transform(vector_df)
 
 # Show PCA results
 pca_result.select("pca_features").show(truncate=False)
+
 ```
+
+In predicting trip duration, we shifted from using zone IDs to latitude and longitude for pickup and dropoff locations, utilizing GeoPandas for geographic data processing.
+
+```
+import geopandas
+zone = gpd.read_file("yellow_taxi_data/yellow_taxi_zones/taxi_zones.shp")
+
+zone.set_crs("EPSG:2263", inplace=True)
+zone['center'] = zone.representative_point()
+center_gdf = gpd.GeoDataFrame(zone, geometry=zone['center'])
+center_gdf = center_gdf.to_crs("EPSG:4326")
+
+zone['long'] = center_gdf.geometry.x
+zone['lat'] = center_gdf.geometry.y
+
+zone = zone.drop(columns = ['OBJECTID','geometry','center'])
+schemazone = StructType([
+    StructField("Shape_Leng", DoubleType(), True),
+    StructField("Shape_Area", DoubleType(), True),
+    StructField("Zone", StringType(), True),
+    StructField("LocationID", StringType(), True),
+    StructField("Borough", StringType(), True),
+    StructField("Long", DoubleType(), True),
+    StructField("Lat", DoubleType(), True)
+
+])
+
+zonedf = spark.createDataFrame(zone, schemazone)
+merged_zone = df.join(zonedf, df.PULocationID == zonedf.LocationID, how = 'left')
+merged_zone = merged_zone.drop(*('VendorID','passenger_count','RatecodeID','store_and_fwd_flag','payment_type', 'fare_amount',
+                                'extra','mta_tax','tip_amount','tolls_amount','improvement_surcharge','total_amount','congestion_surcharge',
+                                'airport_fee', 'LocationID'))
+merged_zone = merged_zone.withColumnRenamed("Shape_Leng", "PU_Shape_Leng") \
+                         .withColumnRenamed("Shape_Area", "PU_Shape_Area") \
+                         .withColumnRenamed("Zone", "PU_Zone") \
+                         .withColumnRenamed("Borough", "PU_Borough") \
+                         .withColumnRenamed("long", "PU_Long") \
+                         .withColumnRenamed("lat", "PU_Lat")
+merged_zone = merged_zone.join(zonedf, merged_zone.DOLocationID == zonedf.LocationID
+merged_zone = merged_zone.withColumnRenamed("Shape_Leng", "DO_Shape_Leng") \
+                         .withColumnRenamed("Shape_Area", "DO_Shape_Area") \
+                         .withColumnRenamed("Zone", "DO_Zone") \
+                         .withColumnRenamed("Borough", "DO_Borough") \
+                         .withColumnRenamed("long", "DO_Long") \
+                         .withColumnRenamed("lat", "DO_Lat")
+merged_zone = merged_zone.withColumn('tpep_pickup_datetime', col('tpep_pickup_datetime').cast('timestamp'))
+merged_zone = merged_zone.withColumn('tpep_dropoff_datetime', col('tpep_dropoff_datetime').cast('timestamp'))
+merged_zone = merged_zone.withColumn('time_diff_seconds', unix_timestamp('tpep_dropoff_datetime') - unix_timestamp('tpep_pickup_datetime'))
+
+merged_zone = merged_zone.withColumn('duration_mins', (col('time_diff_seconds') / 60).cast('int'))
+merged_zone = merged_zone.drop('time_diff_seconds')
+```
+
 
 Features were normalized using a standard scalar, and we employed both Linear Regression and XGBoost models for prediction.
 
 #### Model 1
 
-For our second model, we similarly chose an XGBoost regressor, but for a different task. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
+For our first task, we chose an XGBoost regressor. We took the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. Similarly to our first model, we opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
 
 #### Model 2
 
-With our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor.
+For our second task, with our features preprocessed using the methods described above, we fed the data into an XGBoost regressor with and 80/20 train-test split of 6 months of data. The goal of this model was to take the features of day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor.
 
 ### Result
 
