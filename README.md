@@ -139,10 +139,10 @@ Trip Duration vs. Distance
 All Features (Trends by Hour of Day)
 Payment Type vs Locations
 Dropoff Location (Density)
+```
 
-```
 # Total Amount vs Fare Amount vs Tip Amount
-```
+
 fig, ax = plt.subplots(figsize=(10, 6))
 scatter = sns.scatterplot(data=merged_zone.toPandas(), x='fare_amount', y='total_amount', size='tip_amount', hue='tip_amount', sizes=(20, 200), alpha=0.6, palette="viridis", ax=ax)
 legend1 = ax.legend(*scatter.legend_elements("sizes", num=6), title="Tip Amount ($)")
@@ -155,7 +155,6 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-```
 # Trip Duration vs Distance
 fig, ax = plt.subplots(figsize=(10, 6))
 sns.scatterplot(data=merged_zone.toPandas(), x='trip_distance', y='duration_mins', alpha=0.5, ax=ax, color='green')
