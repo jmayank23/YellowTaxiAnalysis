@@ -140,6 +140,66 @@ All Features (Trends by Hour of Day)
 Payment Type vs Locations
 Dropoff Location (Density)
 
+```
+# Total Amount vs Fare Amount vs Tip Amount
+```
+fig, ax = plt.subplots(figsize=(10, 6))
+scatter = sns.scatterplot(data=merged_zone.toPandas(), x='fare_amount', y='total_amount', size='tip_amount', hue='tip_amount', sizes=(20, 200), alpha=0.6, palette="viridis", ax=ax)
+legend1 = ax.legend(*scatter.legend_elements("sizes", num=6), title="Tip Amount ($)")
+legend2 = ax.legend(title="Tip Amount ($)", bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+ax.add_artist(legend1)
+ax.set_title('Figure 1: Relationship Between Total, Fare, and Tip Amounts')
+ax.set_xlabel('Fare Amount ($)')
+ax.set_ylabel('Total Amount ($)')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+```
+# Trip Duration vs Distance
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.scatterplot(data=merged_zone.toPandas(), x='trip_distance', y='duration_mins', alpha=0.5, ax=ax, color='green')
+ax.set_title('Figure 2: Trip Duration vs. Trip Distance')
+ax.set_xlabel('Trip Distance (miles)')
+ax.set_ylabel('Trip Duration (minutes)')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Trends By Hour of Day for Multiple Features
+fig, axs = plt.subplots(3, 1, figsize=(12, 18), sharex=True)
+sns.lineplot(data=merged_zone.toPandas(), x='hour', y='total_amount', ax=axs[0], estimator='mean', color='red')
+axs[0].set_title('Average Total Amount by Hour of Day')
+axs[0].set_ylabel('Average Total Amount ($)')
+sns.lineplot(data=merged_zone.toPandas(), x='hour', y='trip_distance', ax=axs[1], estimator='mean', color='blue')
+axs[1].set_title('Average Trip Distance by Hour of Day')
+axs[1].set_ylabel('Average Distance (miles)')
+sns.lineplot(data=merged_zone.toPandas(), x='hour', y='duration_mins', ax=axs[2], estimator='mean', color='purple')
+axs[2].set_title('Average Trip Duration by Hour of Day')
+axs[2].set_ylabel('Duration (minutes)')
+plt.xlabel('Hour of Day')
+plt.tight_layout()
+plt.suptitle('Figure 3: Taxi Demand Metrics by Hour of Day', y=1.02)
+plt.show()
+
+# Payment Type by Pickup Locations
+fig, ax = plt.subplots(figsize=(12, 7))
+sns.countplot(data=merged_zone.toPandas(), x='PU_Borough', hue='payment_type', ax=ax)
+ax.set_title('Figure 4: Payment Type by Pickup Locations')
+ax.set_xlabel('Pickup Borough')
+ax.set_ylabel('Count')
+plt.legend(title='Payment Type')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Dropoff Location (Density)
+fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+zones.plot(column='dropoff_count', ax=ax, legend=True,
+       	legend_kwds={'label': "Dropoff Count by Zone"})
+plt.title('Dropoff Location Density')
+plt.show()
+
 #### Preprocessing
 
 In this project, we approached preprocessing with the purpose of enhancing our models. We removed rows with any missing values to prevent false anomaly detection and calculated the 'trip_duration' in seconds by subtracting the pickup time from the dropoff time, excluding non-positive durations.
@@ -330,6 +390,7 @@ Nico Cereghini: Collaborated on planning the model tasks, coding in EDA and prep
 
 Kenny Hwang: Collaborated on planning the tasks, wrote code for anomaly detection and preprocessing, and drafted the results and discussion sections of the final report.
 
-
+William Guy: Collaborated on planning the tasks, wrote code for Feature Relationships Analyzed in EDA, and wrote up the Conclusion section of the final report.
+ 
 
 
