@@ -133,12 +133,12 @@ negative_fares_tips.withColumn("year", year("tpep_pickup_datetime")) \
     .groupBy("year", "month").count().orderBy("year", "month").show()
 ```
 
-Feature Relationships Analyzed in EDA
-Total Amount vs. Fare Amount vs. Tip Amount
-Trip Duration vs. Distance
-All Features (Trends by Hour of Day)
-Payment Type vs Locations
-Dropoff Location (Density)
+#Feature Relationships Analyzed in EDA
+1. Total Amount vs. Fare Amount vs. Tip Amount
+2. Trip Duration vs. Distance
+3. All Features (Trends by Hour of Day)
+4. Payment Type vs Locations
+5. Dropoff Location (Density)
 ```
 
 # Total Amount vs Fare Amount vs Tip Amount
@@ -198,7 +198,7 @@ zones.plot(column='dropoff_count', ax=ax, legend=True,
        	legend_kwds={'label': "Dropoff Count by Zone"})
 plt.title('Dropoff Location Density')
 plt.show()
-
+```
 #### Preprocessing
 
 In this project, we approached preprocessing with the purpose of enhancing our models. We removed rows with any missing values to prevent false anomaly detection and calculated the 'trip_duration' in seconds by subtracting the pickup time from the dropoff time, excluding non-positive durations.
