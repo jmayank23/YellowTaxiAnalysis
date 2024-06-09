@@ -133,7 +133,7 @@ negative_fares_tips.withColumn("year", year("tpep_pickup_datetime")) \
     .groupBy("year", "month").count().orderBy("year", "month").show()
 ```
 
-#Feature Relationships Analyzed in EDA
+Feature Relationships Analyzed in EDA
 1. Total Amount vs. Fare Amount vs. Tip Amount
 2. Trip Duration vs. Distance
 3. All Features (Trends by Hour of Day)
