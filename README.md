@@ -315,14 +315,6 @@ merged_zone = merged_zone.drop('time_diff_seconds')
 
 Features were normalized using a standard scalar, and we employed both Linear Regression and XGBoost models for prediction.
 
-#### Task 1: Trip Duration Prediction
-
-We tested the Linear Regression and XGBoost regressor. We used the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. We opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
-
-#### Task 2: Demand Forecasting
-
-We tested the Linear Regression and XGBoost regressor. From our preprocessed features preprocessed we used day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor. Here, timeslot refers to 60 minute intervals of the day, so all taxis requested from 12 midnight to 1 am on a given day got clubbed into the timeslot with index 0, taxis between 1AM and 2AM for clubbed into timeslot index 1 and so on.
-
 #### Analysis of Taxi Trip Data
 
 #### Average Trip Duration by Taxi Pickup Zone
@@ -347,6 +339,13 @@ This bar chart represents the number of taxi trips per month. The data reveals t
 
 These visualizations provide a detailed analysis of taxi trip patterns, highlighting areas with longer travel times and revealing trends in trip durations and monthly counts. By leveraging this data, stakeholders can make informed decisions to enhance traffic management, improve taxi services, and optimize resource allocation. This analysis supports the goal of understanding and addressing urban transportation challenges effectively.
 
+#### Task 1: Trip Duration Prediction
+
+We tested the Linear Regression and XGBoost regressor. We used the latitude and longitudes of pickup and dropoff locations, day, time, and month to predict the duration of a given trip. We opted for a 80/20 train-test split with an evaluation metric of RMSE. The hyper paramteters for the model were the default for SparkXGBRegressor.
+
+#### Task 2: Demand Forecasting
+
+We tested the Linear Regression and XGBoost regressor. From our preprocessed features preprocessed we used day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor. Here, timeslot refers to 60 minute intervals of the day, so all taxis requested from 12 midnight to 1 am on a given day got clubbed into the timeslot with index 0, taxis between 1AM and 2AM for clubbed into timeslot index 1 and so on.
 
 ### Result
 
