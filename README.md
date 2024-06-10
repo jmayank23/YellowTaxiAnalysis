@@ -323,6 +323,31 @@ We tested the Linear Regression and XGBoost regressor. We used the latitude and 
 
 We tested the Linear Regression and XGBoost regressor. From our preprocessed features preprocessed we used day, time, month, pickup location, holiday, and timeslot to predict the number of taxis needed at every hour timeslot to meet demand. The hyper parameters for the model were the default for SparkXGBRegressor. Here, timeslot refers to 60 minute intervals of the day, so all taxis requested from 12 midnight to 1 am on a given day got clubbed into the timeslot with index 0, taxis between 1AM and 2AM for clubbed into timeslot index 1 and so on.
 
+#### Analysis of Taxi Trip Data
+
+####Average Trip Duration by Taxi Pickup Zone
+<img width="836" alt="image" src="https://github.com/jmayank23/YellowTaxiAnalysis/assets/113940981/b0b6d4e4-b0e6-4360-812b-5a25b6fcd50a">
+
+This map displays the average trip duration for each taxi pickup zone. Zones with longer average trip durations are shaded in darker red, indicating areas where trips tend to take longer. This can highlight regions with potential traffic congestion or longer travel distances. By understanding these patterns, city planners and taxi companies can address inefficiencies and improve service.
+
+#### Average Trip Duration by Taxi Dropoff Zone
+<img width="832" alt="image" src="https://github.com/jmayank23/YellowTaxiAnalysis/assets/113940981/32d39657-1427-4eea-849a-b5e8a3cec462">
+
+This map illustrates the average trip duration for each taxi dropoff zone. Similar to the pickup zones, the darker red areas signify longer average trip durations. Analyzing both pickup and dropoff zones provides a comprehensive view of travel times across the city, helping identify specific areas that might benefit from traffic management solutions.
+
+#### Distribution of Trip Durations
+<img width="959" alt="image" src="https://github.com/jmayank23/YellowTaxiAnalysis/assets/113940981/818b1ec7-b751-4276-95b7-6c140656cddf">
+
+This histogram shows the distribution of trip durations in seconds. The majority of trips are shorter, with a steep decline in frequency as trip duration increases. This suggests that most taxi rides are relatively short, but there are outliers with significantly longer durations. Understanding this distribution helps in planning and optimizing routes to cater to the most common trip lengths.
+
+#### Monthly Trip Counts
+![image](https://github.com/jmayank23/YellowTaxiAnalysis/assets/113940981/7f61be81-b83a-46ca-b887-a23d2ddb0237)
+
+This bar chart represents the number of taxi trips per month. The data reveals trends in taxi usage, with potential seasonal variations or effects of specific events. Monitoring monthly trip counts allows for better resource allocation and anticipation of peak times, ensuring efficient service delivery throughout the year.
+
+These visualizations provide a detailed analysis of taxi trip patterns, highlighting areas with longer travel times and revealing trends in trip durations and monthly counts. By leveraging this data, stakeholders can make informed decisions to enhance traffic management, improve taxi services, and optimize resource allocation. This analysis supports the goal of understanding and addressing urban transportation challenges effectively.
+
+
 ### Result
 
 #### Task 1: Trip Duration Prediction
@@ -390,6 +415,7 @@ Nico Cereghini: Collaborated on planning the model tasks, coding in EDA and prep
 Kenny Hwang: Collaborated on planning the tasks, wrote code for anomaly detection and preprocessing, and drafted the results and discussion sections of the final report.
 
 William Guy: Collaborated on planning the tasks, wrote code for Feature Relationships Analyzed in EDA, and wrote up the Conclusion section of the final report.
- 
+
+Harin Raja: Collaborated on planning tasks, EDA (Spatial analysis of the dataset), and the data preprocessing for the model.
 
 
