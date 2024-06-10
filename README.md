@@ -325,7 +325,7 @@ We tested the Linear Regression and XGBoost regressor. From our preprocessed fea
 
 #### Analysis of Taxi Trip Data
 
-####Average Trip Duration by Taxi Pickup Zone
+#### Average Trip Duration by Taxi Pickup Zone
 <img width="836" alt="image" src="https://github.com/jmayank23/YellowTaxiAnalysis/assets/113940981/b0b6d4e4-b0e6-4360-812b-5a25b6fcd50a">
 
 This map displays the average trip duration for each taxi pickup zone. Zones with longer average trip durations are shaded in darker red, indicating areas where trips tend to take longer. This can highlight regions with potential traffic congestion or longer travel distances. By understanding these patterns, city planners and taxi companies can address inefficiencies and improve service.
